@@ -1,0 +1,245 @@
+Index: ../Practice/pyplot.py
+===================================================================
+diff --git a/../Practice/pyplot.py b/../Practice/pyplot.py
+--- a/../Practice/pyplot.py	
++++ b/../Practice/pyplot.py	
+@@ -1,0 +1,84 @@
++import matplotlib.pyplot as plt
++import numpy as np
++
++
++def basic_plot():
++    plt.figure()
++    plt.plot([1, 2, 3, 4])
++    plt.ylabel('some numbers')
++    plt.show()
++
++
++def x_and_y():
++    plt.figure()
++    plt.plot([1, 2, 3, 4], [1, 4, 9, 16])
++    plt.show()
++
++
++def line_style():
++    plt.plot([1, 2, 3, 4], [1, 8, 12, 24], 'ro')
++    plt.axis([0, 6, 0, 27])
++    plt.show()
++
++
++def nump_plot():
++    t = np.arange(0, 10, 0.3)
++
++    plt.plot(t, t, 'r--', t, t ** 2, 'bs', t, t ** 3, 'g^')
++    plt.show()
++
++
++def relu(t):
++    return t.clip(min=0)
++
++
++def sigmoid(t):
++    return 1 / (1 + np.exp(-t))
++
++
++def sig_plot():
++    t = np.arange(-2, 2, 0.1)
++
++    plt.plot(t, sigmoid(t))
++    plt.show()
++
++
++def relu_plot():
++    t = np.arange(-2, 2, 0.1)
++    # j = t[20:]
++    # k = np.concatenate((np.zeros(20), j))
++    plt.plot(t, sigmoid(t), 'r--', t, relu(t), 'b^')
++    plt.show()
++    # print(len(relu(t)))
++
++
++def sig_vs_relu():
++    t = np.arange(-2, 2, 0.1)
++
++    plt.plot(t, sigmoid(t), 'ro')
++    plt.title("Sigmoid Function vs. ReLu")
++    plt.axis([-2, 2, 0, 2])
++    plt.show()
++
++
++def test_negative():
++    t = np.arange(-2, 2, 0.1)
++    plt.plot(t, t, 'g--')
++    plt.show()
++
++def categorical():
++    names = ['group_a', 'group_b', 'group_c']
++    values = [1, 5, 20]
++
++    plt.figure(figsize=(12, 4))
++
++    plt.subplot(131)
++    plt.bar(names, values)
++    plt.subplot(132)
++    plt.scatter(names, values)
++    plt.subplot(133)
++    plt.plot(names, values)
++    plt.suptitle('Categorical Plotting')
++    plt.show()
++
++relu_plot()
+\ No newline at end of file
+Index: ../Practice/pandas_practice.py
+===================================================================
+diff --git a/../Practice/pandas_practice.py b/../Practice/pandas_practice.py
+--- a/../Practice/pandas_practice.py	
++++ b/../Practice/pandas_practice.py	
+@@ -1,0 +1,84 @@
++import pandas as pd
++import matplotlib.pyplot as plt
++import numpy as np
++
++
++def first_tut():
++    dataset = {
++        'cars': ["BMW", "Volvo", "Ford"],
++        'passings': [3, 7, 2]
++    }
++
++    myvar = pd.DataFrame(dataset)
++    return myvar
++
++
++def version():
++    print(pd.__version__)
++
++
++def series():
++    a = [1, 2, 3]
++
++    a_series = pd.Series(a)
++
++    return a_series
++
++
++def labels():
++    a = [1, 2, 3]
++
++    a_series = pd.Series(a, index=['a', 'b', 'c'])
++
++    return a_series
++
++
++def frames():
++    data = {
++        "calories": [420, 380, 390],
++        "duration": [50, 40, 45]
++    }
++
++    df = pd.DataFrame(data)  # Indexes can be named just like in Series
++
++    # prints another DataFrame
++    print(df.loc[[0, 1]])
++
++
++def load_data(filepath):
++    return pd.read_csv(filepath)
++
++
++def convert_to_date_time(df, index):
++    df[index] = pd.to_datetime(df[index])
++
++def check_nan(df):
++    print(df.info())
++
++def main():
++    df = load_data(filepath='datasets/data.csv')
++    # print(df.to_string())
++
++    # new_df = df.dropna()
++    # print(new_df.to_string())
++
++    # Removing Null rows
++    check_nan(df)
++    df.dropna(subset=['Calories'], inplace=True)
++    check_nan(df)
++
++    # Checking for outliers
++    duration = df['Duration']
++    fig = plt.figure(figsize=(10, 3))
++    plt.boxplot(duration, vert=False)
++    plt.xticks(np.arange(0, 350, 25))
++    plt.show()
++
++    for x in df.index:
++        if df.loc[x, "Duration"] > 90 or df.loc[x, "Duration"] < 25:
++            df.drop(x, inplace=True)
++
++    # print(df.info())
++    print(df.duplicated())
++
++main()
+Index: ../Practice/walmart_plots.py
+===================================================================
+diff --git a/../Practice/walmart_plots.py b/../Practice/walmart_plots.py
+--- a/../Practice/walmart_plots.py	
++++ b/../Practice/walmart_plots.py	
+@@ -1,0 +1,57 @@
++import matplotlib.pyplot as plt
++import numpy as np
++import pandas as pd
++
++
++def load_data(data: str):
++    return pd.read_csv(data)
++
++def data_info(dataframe):
++    print(dataframe.head())
++    # Use method dataframe.to_string() to print whole DataFrame
++    print(dataframe.tail())
++    print(dataframe.info())
++
++def filter_data(dataframe):
++    return dataframe[['state']]
++
++def addlabels(x, y):
++    for i in range(len(x)):
++        plt.text(i, y[i], y[i])
++
++def main():
++    df = load_data('datasets/walmart_2018_11_06.csv')
++    # data_info()
++    # Note the columns with nothing but Null values
++    # Got to remove those
++    df = df.dropna(axis=1)
++
++    plt.figure(figsize=(9,9))
++    states = df['state'].unique()
++    per_state = []
++    for state in states:
++        per_state.append(len(df[df['state'] == state]))
++
++    states_abbr = [state[:2].upper() for state in states]
++
++
++    new_data = {
++        'state': states,
++        'count': per_state
++    }
++    new_df = pd.DataFrame(new_data)
++    new_df = new_df.sort_values(by='count')
++
++    plt.rc('xtick', labelsize=5)
++    plt.bar('state', 'count', data=new_df)
++    addlabels(new_df['state'], new_df['count'])
++    plt.title("No. of Walmarts by State")
++    plt.xlabel("State")
++    plt.ylabel("Walmarts")
++    plt.show()
++
++
++
++
++
++main()
+\ No newline at end of file
