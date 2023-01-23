@@ -1,15 +1,26 @@
 import numpy as np
 import sapai as sp
-from ai import AI
+from ai import filter_mask
 
-test = np.random.rand(89)
-test = test[np.newaxis]
-for i in range(test.shape[1]):
-    if test[0, i] > 0.5:
-        test[0, i] = 1
-    else:
-        test[0, i] = 0
+# test = np.random.rand(89)
+# test = test[np.newaxis]
+# for i in range(test.shape[1]):
+#     if test[0, i] > 0.5:
+#         test[0, i] = 1
+#     else:
+#         test[0, i] = 0
+#
+# fido = AI()
+#
+# print(fido.forward(test))
 
-fido = AI()
+"""
+State data format:
+team_slots(pets_avail+2+statuses)-1
+    Team pet information
+2(pets_avail+items_avail) 65
+    Shop information
+Round # 89
+Gold # 90
+"""
 
-print(fido.forward(test))
