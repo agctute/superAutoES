@@ -24,3 +24,7 @@ Round # 89
 Gold # 90
 """
 
+t = np.zeros(89)
+t = np.expand_dims(t, axis=0)
+print(t.shape)
+
