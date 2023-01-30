@@ -53,14 +53,14 @@ def conv_to_arr(player):
                 shop_item['name'])] = 1
             # if any frozen pets exist, then the pet will be thought as frozen
             res[curr + 1 + tiers.pet_tier_lookup_std[1].index(
-                shop_item['name'])] = 0 if shop_slot['frozen'] else 1
+                shop_item['name'])] = 1 if shop_slot['frozen'] else 0
         elif shop_slot['slot_type'] == 'food':
             res[curr + PETS_AVAIL + tiers.food_tier_lookup[1].index(
                 shop_item['name']
             )] = 1
             # same logic from pets applies to food
             res[curr + PETS_AVAIL + 1 + tiers.food_tier_lookup[1].index(
-                shop_item['name'])] = 0 if shop_slot['frozen'] else 1
+                shop_item['name'])] = 1 if shop_slot['frozen'] else 0
     curr += 2*(PETS_AVAIL + ITEMS_AVAIL)
 
     res[curr] = player.gold
@@ -68,9 +68,9 @@ def conv_to_arr(player):
     res[curr] = player.turn
     return np.expand_dims(res, axis=0)
 
-p.buy_pet(1)
-p.buy_pet(1)
-p.buy_pet(0)
-print(conv_to_arr(p))
+# p.buy_pet(1)
+# p.buy_pet(1)
+# p.buy_pet(0)
+# print(conv_to_arr(p))
 
 # elif team_slot['pet']['name'] in
