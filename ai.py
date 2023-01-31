@@ -89,10 +89,11 @@ turn_end
 """
 def filter_mask(state):
     mask = np.zeros([95, 1])
+    mask[94, 0] = 1
     # Can only buy pets if empty space exists and gold >= 3
     empty_slots = []
     for i in range(TEAM_SLOTS):
-        if state[0, 11+13*i] == 0: #  checks if spot is empty
+        if state[0, 11+13*i] == 0:  #  checks if spot is empty
             empty_slots.append(i)
         else:
             # enables sell action for pet
@@ -113,7 +114,7 @@ def filter_mask(state):
                     else:
                         mask[36 + 6*item] = 1
 
-                if state[0, 101] >= 3:
+                if state[0, 101] >= state[0, 97 + 3*item]:
                     mask[30 + i + 6*item] = 1
 
     for i in range(PETS_AVAIL):  # checks which pets are in the shop
