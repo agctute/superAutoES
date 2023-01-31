@@ -1,5 +1,6 @@
 import numpy as np
 import sapai as sp
+import scipy
 
 TEAM_SLOTS = 5
 PETS_AVAIL = 10
@@ -10,6 +11,10 @@ ROUNDS = 2
 
 def relu(x):
     return max(0, x)
+
+
+def softmax(x):
+    return scipy.special.softmax(x)
 
 
 def generate_wt(x, y):
@@ -35,6 +40,7 @@ class AI:
         m1 = np.dot(input_data, self.w1)
         m2 = np.dot(m1, self.w2)
         o = np.dot(m2, self.w3)
+        o = scipy.special.softmax(o)
         return o
 
 """
