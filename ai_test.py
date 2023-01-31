@@ -37,7 +37,9 @@ class ConversionTests(unittest.TestCase):
         team = sp.Team()
         shop = sp.Shop()
         self.test_player = sp.Player(shop=shop, team=team)
-        self.test_player.buy_pet(1)
+        self.test_player.buy_pet(0)
+        self.test_player.buy_pet(0)
+        self.test_player.buy_pet(0)
         print(team, shop)
         self.conv = conv_to_arr(self.test_player)
 

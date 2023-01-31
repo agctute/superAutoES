@@ -76,14 +76,15 @@ def filter_mask(state):
                         # enables upgrade action for pet
                         mask[85 + 2*slot] = 1
 
-                    # checks which items are available to buy for the pet
+            # checks which items are available to buy for the pet
             for item in range(ITEMS_AVAIL):
                 if state[0, 85 + 2*item]:
-                    if state[86 + 2*item]: #  checks if the items are frozen or not
+                    if state[86 + 2*item]:  #K checks if the items are frozen or not
                         mask[35 + 6*item] = 1
                     else:
                         mask[36 + 6*item] = 1
 
+                if state[0, 90] >= 3:
                     mask[30 + i + 6*item] = 1
 
     # checks if pets can be bought
