@@ -141,9 +141,6 @@ def filter_mask(state):
                     break
             move += 1
 
-    if len(empty_slots) == TEAM_SLOTS:
-        mask[94] = 0
-
     return mask
 
 
