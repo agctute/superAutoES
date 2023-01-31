@@ -46,16 +46,36 @@ team_slots(pets_avail+2+statuses)-1
 Round # 89
 Gold # 90
 
+The input used is a numpy array of dimensions
+[1,89] which represents the current state of the state
+of the game. 
+The description goes by the format:
+
+[indices] *the purpose of this set of indices*
+index: *what the value at this specific index represents*
+... (dots show that the rest of the values of this section
+continue with this pattern)
+
+[0-29] actions on shop pets
+0: whether tiers.pet_tier_lookup_std[1][0] can be bought
+1: if the above is 1, whether 
+
+
 mask data format:
 pets_avail(buy+freeze+unfreeze)
+0
     actions on shop pets
-items_avail(team_slots+freeze+unfreeze) 30
+items_avail(team_slots+freeze+unfreeze)
+ 30
     actions on shop items
-moves 44
+moves 
+44
     ways team pets can be moved
-combine 64
+combine 
+64
     ways where two team pets can be combined
-team_slots(sell, upgrade) 84
+team_slots(sell, upgrade) 
+84
     actions on team pets
 """
 def filter_mask(state):
