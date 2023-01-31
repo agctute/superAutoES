@@ -27,5 +27,7 @@ class Arena:
                 self.robots[i] = AI()
 
     def run(self):
+        for i in range(10):
+
 
 
