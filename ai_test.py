@@ -3,6 +3,7 @@ import sapai as sp
 from ai import filter_mask
 import unittest
 from convert import conv_to_arr
+from ai import filter_mask
 
 # test = np.random.rand(89)
 # test = test[np.newaxis]
@@ -32,14 +33,20 @@ Gold # 89
 
 
 class ConversionTests(unittest.TestCase):
-    def test_conversion(self):
+    def setUp(self) -> None:
         team = sp.Team()
         shop = sp.Shop()
-        test_player = sp.Player(shop=shop, team=team)
-        test_player.buy_pet(1)
+        self.test_player = sp.Player(shop=shop, team=team)
+        self.test_player.buy_pet(1)
         print(team, shop)
+        self.conv = conv_to_arr(self.test_player)
+
+    def test_conversion(self):
         # print(test_player.state)
-        print(conv_to_arr(test_player))
+        print(conv_to_arr(self.test_player))
+
+    def test_filter(self):
+        print(filter_mask(self.conv))
 
 
 if __name__ == '__main__':

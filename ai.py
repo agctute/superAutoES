@@ -78,7 +78,7 @@ def filter_mask(state):
 
                     # checks which items are available to buy for the pet
             for item in range(ITEMS_AVAIL):
-                if state[85 + 2*item]:
+                if state[0, 85 + 2*item]:
                     if state[86 + 2*item]: #  checks if the items are frozen or not
                         mask[35 + 6*item] = 1
                     else:
@@ -92,8 +92,8 @@ def filter_mask(state):
             mask[3*i, 0] = 1
 
     for i in range(PETS_AVAIL):  # checks which pets are in the shop
-        if state[65 + 2*i]:
-            if state[66 + 2 * i] == 0:  # checks if they are frozen
+        if state[0, 65 + 2*i]:
+            if state[0, 66 + 2 * i] == 0:  # checks if they are frozen
                 mask[3*i+1, 0] = 1
             else:  # assumes unfrozen otherwise
                 mask[3*i+2, 0] = 1
