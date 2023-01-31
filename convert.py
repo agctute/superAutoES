@@ -63,9 +63,9 @@ def conv_to_arr(player):
                 shop_item['name'])] = 1 if shop_slot['frozen'] else 0
     curr += 2*(PETS_AVAIL + ITEMS_AVAIL)
 
-    res[curr] = player.gold
-    curr += 1
     res[curr] = player.turn
+    curr += 1
+    res[curr] = player.gold
     return np.expand_dims(res, axis=0)
 
 # p.buy_pet(1)
