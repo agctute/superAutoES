@@ -25,11 +25,11 @@ class AI:
         self.w3 = w3
 
         if not self.w1:
-            self.w1 = generate_wt(89, 30)
+            self.w1 = generate_wt(91, 30)
         if not self.w2:
             self.w2 = generate_wt(30, 30)
         if not self.w3:
-            self.w3 = generate_wt(30, 47)
+            self.w3 = generate_wt(30, 94)
 
     def forward(self, input_data):
         m1 = np.dot(input_data, self.w1)
@@ -112,6 +112,8 @@ def filter_mask(state):
                 # checks if slots are both nonempty
                 elif state[0, pet + 13 * slot]:
                     mask[64 + move] = 1
+                    break
+            move += 1
 
     return mask
 
