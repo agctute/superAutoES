@@ -49,17 +49,17 @@ def conv_to_arr(player):
     for shop_slot in shop['slots']:
         shop_item = shop_slot['obj']
         if shop_slot['slot_type'] == 'pet':
-            res[curr + tiers.pet_tier_lookup_std[1].index(
+            res[curr + 2*tiers.pet_tier_lookup_std[1].index(
                 shop_item['name'])] = 1
             # if any frozen pets exist, then the pet will be thought as frozen
-            res[curr + 1 + tiers.pet_tier_lookup_std[1].index(
+            res[curr + 1 + 2*tiers.pet_tier_lookup_std[1].index(
                 shop_item['name'])] = 1 if shop_slot['frozen'] else 0
         elif shop_slot['slot_type'] == 'food':
-            res[curr + PETS_AVAIL + tiers.food_tier_lookup[1].index(
+            res[curr + PETS_AVAIL + 2*tiers.food_tier_lookup[1].index(
                 shop_item['name']
             )] = 1
             # same logic from pets applies to food
-            res[curr + PETS_AVAIL + 1 + tiers.food_tier_lookup[1].index(
+            res[curr + PETS_AVAIL + 1 + 2*tiers.food_tier_lookup[1].index(
                 shop_item['name'])] = 1 if shop_slot['frozen'] else 0
     curr += 2*(PETS_AVAIL + ITEMS_AVAIL)
 

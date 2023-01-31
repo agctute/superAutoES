@@ -59,7 +59,7 @@ team_slots(sell, upgrade) 84
     actions on team pets
 """
 def filter_mask(state):
-    mask = np.zeros([89, 1])
+    mask = np.zeros([94, 1])
     # Can only buy pets if empty space exists and gold >= 3
     empty_slots = []
     for i in range(TEAM_SLOTS):

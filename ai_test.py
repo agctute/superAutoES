@@ -46,7 +46,8 @@ class ConversionTests(unittest.TestCase):
         print(conv_to_arr(self.test_player))
 
     def test_filter(self):
-        print(filter_mask(self.conv))
+        print(self.conv)
+        print(filter_mask(self.conv).T)
 
 
 if __name__ == '__main__':
