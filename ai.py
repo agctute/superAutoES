@@ -47,13 +47,13 @@ class AI:
 State data format:
 team_slots(pets_avail+2+statuses)-1
     Team pet information
-2(pets_avail+items_avail) 65
+3(pets_avail+items_avail) 65
     Shop information
-Round # 89
-Gold # 90
+Round # 101
+Gold # 102
 
 The input used is a numpy array of dimensions
-[1,89] which represents the current state of the state
+[1,101] which represents the current state of the state
 of the game. 
 The description goes by the format:
 
@@ -83,9 +83,12 @@ combine
 team_slots(sell, upgrade) 
 84
     actions on team pets
+turn_end
+94
+    action to end the turn
 """
 def filter_mask(state):
-    mask = np.zeros([94, 1])
+    mask = np.zeros([95, 1])
     # Can only buy pets if empty space exists and gold >= 3
     empty_slots = []
     for i in range(TEAM_SLOTS):
@@ -104,23 +107,20 @@ def filter_mask(state):
 
             # checks which items are available to buy for the pet
             for item in range(ITEMS_AVAIL):
-                if state[0, 85 + 2*item]:
-                    if state[86 + 2*item]:  #K checks if the items are frozen or not
+                if state[0, 95 + 3*item]:
+                    if state[96 + 3*item]:  #K checks if the items are frozen or not
                         mask[35 + 6*item] = 1
                     else:
                         mask[36 + 6*item] = 1
 
-                if state[0, 90] >= 3:
+                if state[0, 101] >= 3:
                     mask[30 + i + 6*item] = 1
 
-    # checks if pets can be bought
-    if state[0, 90] >= 3 and len(empty_slots) > 0:
-        for i in range(PETS_AVAIL):
-            mask[3*i, 0] = 1
-
     for i in range(PETS_AVAIL):  # checks which pets are in the shop
-        if state[0, 65 + 2*i]:
-            if state[0, 66 + 2 * i] == 0:  # checks if they are frozen
+        if state[0, 65 + 3*i]:
+            if state[0, 67 + 3*i] <= state[0, 102] and len(empty_slots) > 0:  # checks if enough money to buy
+                mask[3*i, 0] = 1
+            if state[0, 66 + 3*i] == 0:  # checks if they are frozen
                 mask[3*i+1, 0] = 1
             else:  # assumes unfrozen otherwise
                 mask[3*i+2, 0] = 1
@@ -140,6 +140,9 @@ def filter_mask(state):
                     mask[64 + move] = 1
                     break
             move += 1
+
+    if len(empty_slots) == TEAM_SLOTS:
+        mask[94] = 0
 
     return mask
 
