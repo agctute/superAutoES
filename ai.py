@@ -43,51 +43,86 @@ class AI:
         o = scipy.special.softmax(o)
         return o
 
-"""
-State data format:
-team_slots(pets_avail+2+statuses)-1
-    Team pet information
-3(pets_avail+items_avail) 65
-    Shop information
-Round # 101
-Gold # 102
+# TEAM_SLOTS: total number of slots in the team (usually 5)
+# PETS_AVAIL: number of pets available in the current round
+# STATUSES: number of statuses that a pet can potentially have in the current round
+# ITEMS_AVAIL: number of items available in the current round
+# ROUND: current round
+# GOLD: current gold
 
-The input used is a numpy array of dimensions
-[1,101] which represents the current state of the state
-of the game. 
-The description goes by the format:
+# This function applies a filter mask to the end output
+# and limits options an ai can pick
+# The array is of shape (1, 103)
+# The array is of the following format, where capital connected words denote
+# variables or features from the Player class:
+# the first TEAM_SLOTS(PETS_AVAIL + 2 + STATUSES) - 1 entries the state of pets in the team
+# the ith (PET_AVAIL + 2 + STATUSES) entries represent the state of the pet in the ith slot, 
+# with 5 total potential pets. if the slot is empty, all entries are 0
+# This pet state is represented by the name of the pet, its health and attack, and what status it has
+# the name of the pet is one-hot encoded, so are the statuses.
+# 
+# The next 3(PETS_AVAIL + ITEMS_AVAIL) entries represent the state of pets in the shop.
+# Since we are only considering the first three rounds, thats was the 3 is for.
+# the ith (PET_AVAIL + 2 + STATUSES) entries represent the state of the pet in the ith slot, 
+# for every pet and item that can be in the shop, the "3" declares:
+# the number of pets/foods of that name in the shop
+# whether one of the pets is frozen
+# the cost of the pet
+# The last two entries are the round number and the gold number
 
-[indices] *the purpose of this set of indices*
-index: *what the value at this specific index represents*
-... (dots show that the rest of the values of this section
-continue with this pattern)
-
-[0-29] actions on shop pets
-0: whether tiers.pet_tier_lookup_std[1][0] can be bought
-1: if the above is 1, whether 
-
-
-mask data format:
-pets_avail(buy+freeze+unfreeze)
-0
-    actions on shop pets
-items_avail(team_slots+freeze+unfreeze)
- 30
-    actions on shop items
-moves 
-44
-    ways team pets can be moved
-combine 
-64
-    ways where two team pets can be combined
-team_slots(sell, upgrade) 
-84
-    actions on team pets
-turn_end
-94
-    action to end the turn
-"""
 def filter_mask(state):
+    """Creates a filter mask for NN output based on given state
+
+    Args:
+        data (ndarray): The input data array of shape (1, 103).
+
+    Returns:
+        ndarray: The corresponding filter mask
+
+    Input Data format:
+    The input data array follows a specific format, where the capital connected words denote
+    variables or features from the Player class.
+
+    - The first TEAM_SLOTS (PETS_AVAIL + 2 + STATUSES) - 1 entries represent the state of pets in the team.
+      Each (PETS_AVAIL + 2 + STATUSES) entries represents the state of the pet in the corresponding slot,
+      with a total of 5 potential pets.
+      If a slot is empty, all entries are 0.
+      The pet state includes the name of the pet, its health and attack, and any associated status.
+      The pet name is one-hot encoded, as are the statuses.
+
+    - The next 3(PETS_AVAIL + ITEMS_AVAIL) entries represent the state of pets in the shop.
+      Since we are considering only the first three rounds, the number 3 indicates the No. of rounds.
+      Each entry represents the state of the pet or item in the corresponding slot.
+      For every pet and item that can be in the shop, the entry contains the following information:
+      - The number of pets/foods of that name in the shop.
+      - Whether one of the pets/foods is frozen.
+      - The cost of the pet/food.
+
+    - The last two entries are the round number and the gold number.
+
+    Output Data format:
+    The mask data format specifies the actions available for different components:
+    - PETS_AVAIL (BUY+FREEZE+UNFREEZE): indices 0-29 (10 pets)
+      Potential actions on shop pets, where every 3 entries represent the option to buy, freeze, or unfreeze
+      the ith pet
+
+    - ITEMS_AVAIL (TEAM_SLOTS+freeze+unfreeze): indices 30-43 (2 items, 5 slots)
+      Potential actions on shop pets, where every 7 entries represent the option to buy for the ith pet,
+      or freeze/unfreeze the ith item
+
+    - MOVES: indices 44-58 (5 + 4 + 3 + 2 + 1)
+      Ways team pets can be swapped.
+      i.e. swap 1 and 2, 1 and 3, ..., 4 and 5
+
+    - COMBINE: indices 59-73
+      Ways where two team pets can be combined.
+
+    - TEAM_SLOTS(sell, upgrade): indices 74-83
+      Actions on team pets.
+
+    - turn_end: 84
+      Action to end the turn.
+    """
     mask = np.zeros([95, 1])
     mask[94, 0] = 1
     # Can only buy pets if empty space exists and gold >= 3
