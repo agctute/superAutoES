@@ -24,19 +24,31 @@ def generate_wt(x, y):
 
 
 class AI:
-    def __init__(self, w1=None, w2=None, w3=None):
+    """
+    Main actor for AI players
+    """
+    def __init__(self,player, w1: np.ndarray, w2: np.ndarray, w3: np.ndarray):
+        """
+        :param w1: weight matrix for the first layer
+        :param w2: weight matrix for the second layer
+        :param w3: weight matrix for the third layer
+        """
+
         self.w1 = w1
         self.w2 = w2
         self.w3 = w3
 
         if not self.w1:
-            self.w1 = generate_wt(91, 30)
+            self.w1 = generate_wt(84, 30)
         if not self.w2:
             self.w2 = generate_wt(30, 30)
         if not self.w3:
             self.w3 = generate_wt(30, 94)
 
     def forward(self, input_data):
+        """Creates a forward pass through the network, returning a decision based on Player state
+        :param input_data: a 1D array of length 84, representing the state of the player
+        """
         m1 = np.dot(input_data, self.w1)
         m2 = np.dot(m1, self.w2)
         o = np.dot(m2, self.w3)
